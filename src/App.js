@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import Post from "./Post";
 import { auth, db } from "./firebase";
-import { Box, Button, Input, Modal, Typography } from "@mui/material";
-
+import { Box, Button, Input, Modal } from "@mui/material";
+import ImageUpload from "./ImageUpload";
 import { styled } from "@mui/material";
 
 function getModalStyle() {
@@ -47,13 +47,6 @@ function App() {
       if (authUser) {
         console.log(authUser);
         setUser(authUser);
-
-        // if (authUser.displayName) {
-        // } else {
-        //   return authUser.updateProfile({
-        //    displayName: username,
-        //  });
-        //  }
       } else {
         setUser(null);
       }
@@ -86,20 +79,28 @@ function App() {
       })
       .catch((error) => alert(error.message));
 
-      setOpen(false);
+    setOpen(false);
   };
 
   const signIn = (event) => {
     event.preventDefault();
 
-    auth.signInWithEmailAndPassword(email, password)
-    .catch((error) => alert(error.message))
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .catch((error) => alert(error.message));
 
     setOpenSignIn(false);
   };
 
   return (
     <div className="app">
+
+      {user?.displayName ? (
+        <ImageUpload username={user.displayName} />
+      ) : (
+        <h3>Sorry, you need to login to upload</h3>
+      )}
+
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
           <form className="app__signup">
@@ -160,7 +161,7 @@ function App() {
               onChange={(e) => setPassword(e.target.value)}
             />
             <Button type="submit" onClick={signIn}>
-              Sign In
+              Login
             </Button>
           </form>
         </Box>
@@ -180,7 +181,7 @@ function App() {
         <Button onClick={() => auth.signOut()}>Logout</Button>
       ) : (
         <div className="app_loginContainer">
-          <Button onClick={setOpenSignIn}>Sign In</Button>
+          <Button onClick={setOpenSignIn}>Login</Button>
           <Button onClick={handleOpen}>Sign Up</Button>
         </div>
       )}
