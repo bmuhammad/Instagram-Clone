@@ -9,8 +9,10 @@
 .app__header {
   background-color: white;
   padding: 20px;
-  border-bottom: 5px solid black;
+ /* border-bottom: 5px solid black; */
   object-fit: contain;
+  display: flex;
+  justify-content: space-between;
 }
 
 .app__headerImage {
@@ -18,9 +20,10 @@
   max-width: 100px;
   max-height: 100px;
   object-fit: contain;
-  padding-left: 20px;
 
-}
+ 
+
+} 
 
 .header_border {
   border-bottom: 1px solid lightgray;

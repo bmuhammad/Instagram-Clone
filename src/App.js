@@ -58,14 +58,16 @@ function App() {
   }, [user, username]);
 
   useEffect(() => {
-    db.collection("posts").onSnapshot((snapshot) => {
-      setPosts(
-        snapshot.docs.map((doc) => ({
-          id: doc.id,
-          post: doc.data(),
-        }))
-      );
-    });
+    db.collection("posts")
+      .orderBy("timestamp", "desc")
+      .onSnapshot((snapshot) => {
+        setPosts(
+          snapshot.docs.map((doc) => ({
+            id: doc.id,
+            post: doc.data(),
+          }))
+        );
+      });
   }, []);
 
   const signUp = (event) => {
@@ -94,13 +96,6 @@ function App() {
 
   return (
     <div className="app">
-
-      {user?.displayName ? (
-        <ImageUpload username={user.displayName} />
-      ) : (
-        <h3>Sorry, you need to login to upload</h3>
-      )}
-
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
           <form className="app__signup">
@@ -167,17 +162,13 @@ function App() {
         </Box>
       </Modal>
 
-      <div className="app_header">
+      <div className="app__header">
         <img
           className="app__headerImage"
           src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/800px-Instagram_logo.svg.png"
           alt=""
         />
-
-        <h1 className="header_border"></h1>
-      </div>
-
-      {user ? (
+           {user ? (
         <Button onClick={() => auth.signOut()}>Logout</Button>
       ) : (
         <div className="app_loginContainer">
@@ -185,6 +176,11 @@ function App() {
           <Button onClick={handleOpen}>Sign Up</Button>
         </div>
       )}
+
+       
+      </div>
+      <h1 className="header_border"></h1>
+   
 
       {posts.map(({ id, post }) => (
         <Post
@@ -194,6 +190,12 @@ function App() {
           imageUrl={post.imageUrl}
         />
       ))}
+
+      {user?.displayName ? (
+        <ImageUpload username={user.displayName} />
+      ) : (
+        <h3>Sorry, you need to login to upload</h3>
+      )}
     </div>
   );
 }

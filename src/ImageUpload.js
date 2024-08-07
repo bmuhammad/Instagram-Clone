@@ -2,11 +2,12 @@ import { Button } from "@mui/material";
 import React, { useState } from "react";
 import { storage, db } from "./firebase";
 import firebase from "firebase/compat/app";
-import 'firebase/compat/auth';
-import 'firebase/compat/firestore';
-import 'firebase/compat/storage';
+import "firebase/compat/auth";
+import "firebase/compat/firestore";
+import "firebase/compat/storage";
+import './imageUpload.css'
 
-function ImageUpload({ username}) {
+function ImageUpload({ username }) {
   const [image, setImage] = useState(null);
   const [progress, setProgress] = useState(0);
   const [caption, setCaption] = useState("");
@@ -19,16 +20,18 @@ function ImageUpload({ username}) {
 
   const handleUpload = () => {
     const uploadTask = storage.ref(`images/${image.name}`).put(image);
+    console.log("uploadtask", uploadTask);
     uploadTask.on(
       "state_changed",
       (snapshot) => {
         const progress = Math.round(
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         );
+        console.log("progress", progress);
         setProgress(progress);
       },
       (error) => {
-        console.log(error);
+        console.log("error", error);
         alert(error.message);
       },
       () => {
@@ -38,10 +41,10 @@ function ImageUpload({ username}) {
           .getDownloadURL()
           .then((url) => {
             db.collection("posts").add({
-              Timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+              timestamp: firebase.firestore.FieldValue.serverTimestamp(),
               caption: caption,
               imageUrl: url,
-              username: username
+              username: username,
             });
 
             setProgress(0);
@@ -53,8 +56,8 @@ function ImageUpload({ username}) {
   };
 
   return (
-    <div>
-        <progress value={progress} max="100" />
+    <div className='imageupload'>
+      <progress className="imageupload__progress" value={progress} max="100" />
       <input
         type="text"
         placeholder="Enter a caption..."
@@ -62,7 +65,7 @@ function ImageUpload({ username}) {
         value={caption}
       />
       <input type="file" onChange={handleChange} />
-      <Button onCLick={handleUpload}>Upload</Button>
+      <Button onClick={handleUpload}>Upload</Button>
     </div>
   );
 }
