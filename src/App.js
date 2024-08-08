@@ -6,6 +6,7 @@ import { Box, Button, Input, Modal } from "@mui/material";
 import ImageUpload from "./ImageUpload";
 import { styled } from "@mui/material";
 
+
 function getModalStyle() {
   const top = 50;
   const left = 50;
@@ -181,8 +182,8 @@ function App() {
       </div>
       <h1 className="header_border"></h1>
    
-
-      {posts.map(({ id, post }) => (
+   <div className="app__posts">
+   {posts.map(({ id, post }) => (
         <Post
           key={id}
           username={post.username}
@@ -190,6 +191,8 @@ function App() {
           imageUrl={post.imageUrl}
         />
       ))}
+
+   </div>
 
       {user?.displayName ? (
         <ImageUpload username={user.displayName} />

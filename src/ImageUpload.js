@@ -7,6 +7,8 @@ import "firebase/compat/firestore";
 import "firebase/compat/storage";
 import './imageUpload.css'
 
+
+
 function ImageUpload({ username }) {
   const [image, setImage] = useState(null);
   const [progress, setProgress] = useState(0);
